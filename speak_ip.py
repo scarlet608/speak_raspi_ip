@@ -3,12 +3,12 @@
 
 import os
 import sys
-import time
 import socket
 import subprocess
+import string
 
 voice_path = os.path.join(sys.path[0], 'voice')
-player = ["mpg123"]
+player = ["omxplayer"]
 
 
 def getLocalIP():
@@ -25,12 +25,16 @@ def getLocalIP():
 
 
 def getFilePath(filename):
+    wav_file_name = string.ascii_lowercase + string.digits
+    if filename in wav_file_name:
+	return os.path.join(voice_path, "%s.wav" % filename.upper())
     return os.path.join(voice_path, "%s.mp3" % filename)
 
 
 def play(voice):
     for i in player:
         cmd = "%s %s" % (i, getFilePath(voice))
+	print cmd
         a = subprocess.Popen(
             cmd,
             shell=True,
@@ -61,4 +65,3 @@ if __name__ == '__main__':
             speak(ip)
         if count == 10:
             break
-        time.sleep(1)
